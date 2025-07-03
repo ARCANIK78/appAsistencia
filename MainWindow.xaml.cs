@@ -48,6 +48,7 @@ namespace appAsistencia
         }
         private void BtnIniciarCamara_Click(object sender, RoutedEventArgs e)
         {
+
             var videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             if (videoDevices.Count == 0)
             {
@@ -126,11 +127,10 @@ namespace appAsistencia
                         }
 
                         ApiService api = new ApiService();
-                        bool exito = await api.RegistrarAsistencia(ci, tipo);
 
-                        lblResultadoQR.Text = exito
-                            ? $"✅ Asistencia registrada para {ci} ({tipo})"
-                            : "❌ Error al registrar asistencia";
+                        var respuestaRegistro = await api.RegistrarAsistencia(ci, tipo);
+
+                        lblResultadoQR.Text = respuestaRegistro.Mensaje;
 
                         videoSource.SignalToStop();
                     }
@@ -166,9 +166,21 @@ namespace appAsistencia
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (videoSource != null && videoSource.IsRunning)
-                videoSource.SignalToStop();
-            
+            e.Cancel = true; // Detenemos el cierre temporalmente
+
+            Task.Run(() =>
+            {
+                if (videoSource != null && videoSource.IsRunning)
+                {
+                    videoSource.SignalToStop();
+                    videoSource.WaitForStop();
+                }
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Application.Current.Shutdown(); // Cierra todo correctamente desde el hilo principal
+                });
+            });
         }
     }
 }

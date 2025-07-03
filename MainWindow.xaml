@@ -7,13 +7,13 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
-        Title="" Height="566" Width="826"
+        Closing="Window_Closing"
+        Title="" Height="586" Width="826"
         Background="#FFFAFAFA">
-
-    <Grid Margin="0,0,0,-6">
+    <Grid Margin="0,0,0,13">
         <!-- Imagen de cámara -->
         <Border BorderBrush="DarkGray" BorderThickness="2" CornerRadius="8"
-                Margin="170,271,170,12" Background="Black">
+                Margin="170,291,170,0" Background="Black">
             <Image x:Name="videoImagen" Stretch="Uniform" Margin="-2,18,9,8" RenderTransformOrigin="0.5,0.5">
                 <Image.RenderTransform>
                     <TransformGroup>
@@ -28,7 +28,7 @@
 
         <!-- Panel de control QR -->
         <Border Margin="30,67,80,0" VerticalAlignment="Top"
-        Background="#FFF0F0F0" CornerRadius="10" Padding="20" Height="192">
+        Background="#FFF0F0F0" CornerRadius="10" Padding="20" Height="199">
             <StackPanel>
                 <TextBlock Text="Escáner de QR" FontSize="28" FontWeight="Bold" Foreground="#2D89EF" Margin="0,0,0,20"/>
 
@@ -55,7 +55,9 @@
                 <TextBlock Text="AppAsistencia" FontSize="18" FontWeight="Bold" Foreground="White" DockPanel.Dock="Left"/>
 
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                    <TextBlock x:Name="txtNnameFecha" FontSize="15"  Foreground="White" Margin="0,0,15,0" FontWeight="Bold">Fecha: </TextBlock>
                     <TextBlock x:Name="txtFecha" FontSize="14" Foreground="White" Margin="0,0,15,0"/>
+                    <TextBlock x:Name="txtNameHora" FontSize="15" Foreground="White" Margin="0,0,15,0" FontWeight="Bold">Hora:</TextBlock>
                     <TextBlock x:Name="txtHora" FontSize="14" Foreground="White"/>
                 </StackPanel>
             </DockPanel>

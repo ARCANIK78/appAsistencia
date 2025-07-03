@@ -19,7 +19,7 @@ namespace appAsistencia.api
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public async Task<bool> RegistrarAsistencia(string ci, string tipo)
+        public async Task<(bool Exito, string Mensaje)> RegistrarAsistencia(string ci, string tipo)
         {
             var asistencia = new
             {
@@ -34,13 +34,21 @@ namespace appAsistencia.api
             try
             {
                 var respuesta = await _httpClient.PostAsync("api/Asistencia", contenido);
-                return respuesta.IsSuccessStatusCode;
+                if (respuesta.IsSuccessStatusCode) 
+                {
+                    return (true, "✅ Asistencia registrada correctamente.");
+                }
+                else
+                {
+                    string errorMsg = await respuesta.Content.ReadAsStringAsync();
+                    return (false, $"❌ {errorMsg}");
+                }
+                
             }
             catch (Exception ex)
             {
                 // Puedes registrar el error en un log o mostrar un mensaje
-                Console.WriteLine("Error al conectar con la API: " + ex.Message);
-                return false;
+               return (false, $"❌ Error al conectar con la API: {ex.Message}");
             }
         }
     }
