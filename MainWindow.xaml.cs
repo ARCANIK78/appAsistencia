@@ -19,6 +19,7 @@ using System.Drawing;
 using AForge.Video;
 using AForge.Video.DirectShow;
 using System.Collections.Generic;
+using appAsistencia.model;
 
 
 namespace appAsistencia
@@ -28,12 +29,22 @@ namespace appAsistencia
         private VideoCaptureDevice videoSource;
         private Bitmap currentFrame;
         private DispatcherTimer timer;
+
         public MainWindow()
         {
             InitializeComponent();
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(500);
             timer.Tick += Timer_Tick;
+
+            txtFecha.Text = DateTime.Now.ToString("dd/MM/yyyy");
+            // Hora actualizable cada segundo
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += (s, e) =>
+            {
+                txtHora.Text = DateTime.Now.ToString("HH:mm:ss");
+            };
+            timer.Start();
         }
         private void BtnIniciarCamara_Click(object sender, RoutedEventArgs e)
         {
@@ -97,15 +108,34 @@ namespace appAsistencia
                         string ci = resultado.Text.Trim();
                         timer.Stop();
                         lblCI.Text = ci;
+
+                        var apiHorario = new ApiHorarioTrabajo();
+                        var horario = await apiHorario.ObtenerHorarioAsync();
+
+                        if (horario == null)
+                        {
+                            lblResultadoQR.Text = "❌ No se pudo obtener el horario desde la API.";
+                            return;
+                        }
+
+                        string tipo = ObtenerTipoSegunHora(DateTime.Now, horario);
+                        if (tipo == null)
+                        {
+                            lblResultadoQR.Text = "❌ Fuera de horario válido.";
+                            return;
+                        }
+
                         ApiService api = new ApiService();
-                        bool exito = await api.RegistrarAsistencia(ci);
+                        bool exito = await api.RegistrarAsistencia(ci, tipo);
 
                         lblResultadoQR.Text = exito
-                            ? $"✅ Asistencia registrada para {ci}"
+                            ? $"✅ Asistencia registrada para {ci} ({tipo})"
                             : "❌ Error al registrar asistencia";
+
                         videoSource.SignalToStop();
                     }
-                    frameCopy.Dispose(); // liberar la copia
+
+                    frameCopy.Dispose();
                 }
                 catch (Exception ex)
                 {
@@ -113,10 +143,32 @@ namespace appAsistencia
                 }
             }
         }
+
+        private string ObtenerTipoSegunHora(DateTime hora, Horario horario)
+        {
+            TimeSpan t = hora.TimeOfDay;
+
+            TimeSpan entradaAM = TimeSpan.Parse(horario.EntradaAM);
+            TimeSpan salidaAM = TimeSpan.Parse(horario.SalidaAM);
+            TimeSpan entradaPM = TimeSpan.Parse(horario.EntradaPM);
+            TimeSpan salidaPM = TimeSpan.Parse(horario.SalidaPM);
+
+            if (t >= entradaAM && t < salidaAM)
+                return "EntradaAM";
+            else if (t >= salidaAM && t < entradaPM)
+                return "SalidaAM";
+            else if (t >= entradaPM && t < salidaPM)
+                return "EntradaPM";
+            else if (t >= salidaPM && t <= TimeSpan.FromHours(23).Add(TimeSpan.FromMinutes(59)))
+                return "SalidaPM";
+            else
+                return null;
+        }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (videoSource != null && videoSource.IsRunning)
                 videoSource.SignalToStop();
+            
         }
     }
 }

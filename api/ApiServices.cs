@@ -19,13 +19,13 @@ namespace appAsistencia.api
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public async Task<bool> RegistrarAsistencia(string ci)
+        public async Task<bool> RegistrarAsistencia(string ci, string tipo)
         {
             var asistencia = new
             {
                 CI = ci,
-                Hora = DateTime.Now.ToString("HH:mm:ss"),
-                Falta = false
+                Falta = false,  
+                Tipo = tipo,
             };
 
             var json = JsonConvert.SerializeObject(asistencia);

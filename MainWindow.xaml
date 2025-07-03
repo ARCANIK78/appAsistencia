@@ -4,16 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:appAsistencia"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
-        Title="---" Height="450" Width="800">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="41*"/>
-            <ColumnDefinition Width="7*"/>
-            <ColumnDefinition Width="752*"/>
-        </Grid.ColumnDefinitions>
-        <Border Grid.Column="2" BorderBrush="DarkGray" BorderThickness="2" CornerRadius="8" Margin="239,181,287,30" Background="Black">
-            <Image x:Name="videoImagen" Stretch="Uniform" Margin="-1,12,8,11" RenderTransformOrigin="0.5,0.5">
+        Title="" Height="566" Width="826"
+        Background="#FFFAFAFA">
+
+    <Grid Margin="0,0,0,-6">
+        <!-- Imagen de cámara -->
+        <Border BorderBrush="DarkGray" BorderThickness="2" CornerRadius="8"
+                Margin="170,271,170,12" Background="Black">
+            <Image x:Name="videoImagen" Stretch="Uniform" Margin="-2,18,9,8" RenderTransformOrigin="0.5,0.5">
                 <Image.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -24,15 +25,40 @@
                 </Image.RenderTransform>
             </Image>
         </Border>
-        <StackPanel Grid.Column="2" Margin="63,61,68,0" VerticalAlignment="Top">
-            <TextBlock Text="Escáner de QR" FontSize="28" FontWeight="Bold" Foreground="#2D89EF" Margin="0,0,0,20"/>
 
-            <Button Name="BtnIniciarCamara" Click="BtnIniciarCamara_Click" 
-            Background="#2D89EF" Foreground="White" Padding="10,5" FontWeight="Bold" BorderThickness="0" Width="570">
-                Iniciar Cámara
-            </Button>
-            <TextBlock x:Name="lblResultadoQR" FontSize="16" Margin="0,20,0,0" TextWrapping="Wrap"/>
-            <TextBlock x:Name="lblCI" />
-        </StackPanel>
+        <!-- Panel de control QR -->
+        <Border Margin="30,67,80,0" VerticalAlignment="Top"
+        Background="#FFF0F0F0" CornerRadius="10" Padding="20" Height="192">
+            <StackPanel>
+                <TextBlock Text="Escáner de QR" FontSize="28" FontWeight="Bold" Foreground="#2D89EF" Margin="0,0,0,20"/>
+
+                <!-- Botón con borde redondeado usando Border -->
+                <Border CornerRadius="6">
+                    <Button Width="217" Height="45" Background="#007ACC" Foreground="White"
+                    FontWeight="Bold" Cursor="Hand" BorderThickness="0" Click="BtnIniciarCamara_Click">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <fa:ImageAwesome Icon="Camera" Width="22" Height="22" Margin="0,0,8,0" Foreground="White"/>
+                            <TextBlock Text="Iniciar Cámara" FontSize="14"/>
+                        </StackPanel>
+                    </Button>
+                </Border>
+
+                <TextBlock x:Name="lblResultadoQR" FontSize="16" Margin="0,20,0,0" TextWrapping="Wrap"/>
+                <TextBlock x:Name="lblCI" />
+            </StackPanel>
+        </Border>
+
+        <!-- Cabecera: Nombre App, Fecha y Hora -->
+        <Border Grid.Column="2" Background="#FF007ACC" Height="50" VerticalAlignment="Top" Grid.ColumnSpan="5">
+            <DockPanel Grid.Column="2" Margin="20,10,20,0" VerticalAlignment="Top" LastChildFill="False">
+                <!-- Nombre de la aplicación -->
+                <TextBlock Text="AppAsistencia" FontSize="18" FontWeight="Bold" Foreground="White" DockPanel.Dock="Left"/>
+
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                    <TextBlock x:Name="txtFecha" FontSize="14" Foreground="White" Margin="0,0,15,0"/>
+                    <TextBlock x:Name="txtHora" FontSize="14" Foreground="White"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
     </Grid>
 </Window>
