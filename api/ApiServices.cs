@@ -14,7 +14,7 @@ namespace appAsistencia.api
         public ApiService()
         {
             _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri("https://localhost:44332/"); 
+            _httpClient.BaseAddress = new Uri("https://localhost:44332/");
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
@@ -24,7 +24,7 @@ namespace appAsistencia.api
             var asistencia = new
             {
                 CI = ci,
-                Falta = false,  
+                Falta = false,
                 Tipo = tipo,
             };
 
@@ -34,7 +34,7 @@ namespace appAsistencia.api
             try
             {
                 var respuesta = await _httpClient.PostAsync("api/Asistencia", contenido);
-                if (respuesta.IsSuccessStatusCode) 
+                if (respuesta.IsSuccessStatusCode)
                 {
                     return (true, "✅ Asistencia registrada correctamente.");
                 }
@@ -43,12 +43,12 @@ namespace appAsistencia.api
                     string errorMsg = await respuesta.Content.ReadAsStringAsync();
                     return (false, $"❌ {errorMsg}");
                 }
-                
+
             }
             catch (Exception ex)
             {
                 // Puedes registrar el error en un log o mostrar un mensaje
-               return (false, $"❌ Error al conectar con la API: {ex.Message}");
+                return (false, $"❌ Error al conectar con la API: {ex.Message}");
             }
         }
     }

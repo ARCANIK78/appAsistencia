@@ -13,7 +13,7 @@
     <Grid Margin="0,0,0,13">
         <!-- Imagen de cámara -->
         <Border BorderBrush="DarkGray" BorderThickness="2" CornerRadius="8"
-                Margin="170,291,170,0" Background="Black">
+                Margin="170,283,170,8" Background="Black">
             <Image x:Name="videoImagen" Stretch="Uniform" Margin="-2,18,9,8" RenderTransformOrigin="0.5,0.5">
                 <Image.RenderTransform>
                     <TransformGroup>
@@ -33,16 +33,14 @@
                 <TextBlock Text="Escáner de QR" FontSize="28" FontWeight="Bold" Foreground="#2D89EF" Margin="0,0,0,20"/>
 
                 <!-- Botón con borde redondeado usando Border -->
-                <Border CornerRadius="6">
-                    <Button Width="217" Height="45" Background="#007ACC" Foreground="White"
-                    FontWeight="Bold" Cursor="Hand" BorderThickness="0" Click="BtnIniciarCamara_Click">
+                <Border CornerRadius="6"  BorderThickness="2" Background="#007ACC" Width="217" Height="45" Cursor="Hand">
+                    <Button Background="Transparent" BorderThickness="0" Click="BtnIniciarCamara_Click" Padding="0" >
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                             <fa:ImageAwesome Icon="Camera" Width="22" Height="22" Margin="0,0,8,0" Foreground="White"/>
-                            <TextBlock Text="Iniciar Cámara" FontSize="14"/>
+                            <TextBlock Text="Iniciar Cámara" FontSize="14" Foreground="White"/>
                         </StackPanel>
                     </Button>
                 </Border>
-
                 <TextBlock x:Name="lblResultadoQR" FontSize="16" Margin="0,20,0,0" TextWrapping="Wrap"/>
                 <TextBlock x:Name="lblCI" />
             </StackPanel>

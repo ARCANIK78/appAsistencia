@@ -164,6 +164,7 @@ namespace appAsistencia
             else
                 return null;
         }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = true; // Detenemos el cierre temporalmente
