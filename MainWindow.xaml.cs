@@ -108,21 +108,20 @@ namespace appAsistencia
                     {
                         string ci = resultado.Text.Trim();
                         timer.Stop();
-                        lblCI.Text = ci;
 
                         var apiHorario = new ApiHorarioTrabajo();
                         var horario = await apiHorario.ObtenerHorarioAsync();
 
                         if (horario == null)
                         {
-                            lblResultadoQR.Text = "❌ No se pudo obtener el horario desde la API.";
+                            new ToastMessage("❌ No se pudo obtener el horario desde la API.").Show();
                             return;
                         }
 
                         string tipo = ObtenerTipoSegunHora(DateTime.Now, horario);
                         if (tipo == null)
                         {
-                            lblResultadoQR.Text = "❌ Fuera de horario válido.";
+                            new ToastMessage("❌ Fuera de horario válido.").Show();
                             return;
                         }
 
@@ -130,7 +129,7 @@ namespace appAsistencia
 
                         var respuestaRegistro = await api.RegistrarAsistencia(ci, tipo);
 
-                        lblResultadoQR.Text = respuestaRegistro.Mensaje;
+                        new ToastMessage(respuestaRegistro.Mensaje).Show();
 
                         videoSource.SignalToStop();
                     }
@@ -152,8 +151,9 @@ namespace appAsistencia
             TimeSpan salidaAM = TimeSpan.Parse(horario.SalidaAM);
             TimeSpan entradaPM = TimeSpan.Parse(horario.EntradaPM);
             TimeSpan salidaPM = TimeSpan.Parse(horario.SalidaPM);
+            TimeSpan toleranciaAntes = TimeSpan.FromMinutes(30);
 
-            if (t >= entradaAM && t < salidaAM)
+            if (t >= (entradaAM - toleranciaAntes) && t < salidaAM)
                 return "EntradaAM";
             else if (t >= salidaAM && t < entradaPM)
                 return "SalidaAM";

@@ -33,21 +33,29 @@ namespace appAsistencia.api
 
             try
             {
-                var respuesta = await _httpClient.PostAsync("api/Asistencia", contenido);
+                var respuesta = await _httpClient.PostAsync("api/Asistencia/registrar", contenido);
                 if (respuesta.IsSuccessStatusCode)
                 {
+
+                    Console.WriteLine("Se Registro");
                     return (true, "✅ Asistencia registrada correctamente.");
                 }
                 else
                 {
                     string errorMsg = await respuesta.Content.ReadAsStringAsync();
-                    return (false, $"❌ {errorMsg}");
+
+                    if (errorMsg.Contains("Ya se registró este tipo de asistencia"))
+                    {
+                        return (false, "❌ Ya se registró este tipo de asistencia para este empleado en esta fecha.");
+                    }
+                    return (false, "❌ Error al registrar la asistencia. Intente nuevamente.");
+
                 }
 
             }
             catch (Exception ex)
             {
-                // Puedes registrar el error en un log o mostrar un mensaje
+                Console.WriteLine(ex.Message);
                 return (false, $"❌ Error al conectar con la API: {ex.Message}");
             }
         }
